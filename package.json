@@ -1,0 +1,23 @@
+{
+  "name": "qa-api",
+  "version": "1.0.0",
+  "description": "QA api for sdc project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-O-Keefe/qa-api.git"
+  },
+  "author": "Zadok Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-O-Keefe/qa-api/issues"
+  },
+  "homepage": "https://github.com/Team-O-Keefe/qa-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "postgres": "^1.0.2"
+  }
+}
