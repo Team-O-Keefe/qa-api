@@ -14,4 +14,6 @@ CREATE TABLE questions (
 -- FROM '/home/downsauce/hackreactor/SDC/qa-api/questions.csv'
 -- DELIMITER ','
 -- CSV HEADER;
+-- CREATE INDEX product_idx on questions (product_id);
+
 -- sudo -u postgres psql < server/questions.sql
