@@ -29,10 +29,12 @@ app.post('/answers', async (req, res) => {
   const {
     body, name, email, photos
   } = req.body;
-  console.log(questionId, req.body);
+  // console.log(questionId, req.body);
   const id = await db.query('SELECT MAX(id) from answers');
-  console.log(id);
-  db.none('INSERT INTO answers(id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [id[0].max + 1, questionId, body, Date.now(), name, email, false, 0])
+  const photoId = await db.query('SELECT MAX(id) from photos');
+  // console.log(id);
+  await db.none('INSERT INTO answers(id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [id[0].max + 1, questionId, body, Date.now(), name, email, false, 0]);
+  await db.none('INSERT INTO photos(id, answer_id, url) VALUES($1, $2, $3)', [photoId[0].max + 1, id[0].max + 1, photos])
     .then(() => {
       res.sendStatus(200);
     })
@@ -43,7 +45,44 @@ app.post('/answers', async (req, res) => {
 
 app.put('/answerReport', async (req, res) => {
   const answerId = req.query.answer_id;
-  console.log(answer_id);
+  db.none(`UPDATE answers SET reported = ${true} WHERE id = ${answerId}`)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+});
+
+app.put('/questionReport', async (req, res) => {
+  const questionId = req.query.answer_id;
+  db.none(`UPDATE questions SET reported = ${true} WHERE id = ${questionId}`)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+});
+
+app.put('/answerHelp', (req, res) => {
+  db.query(`UPDATE answers SET helpful = helpful + 1 WHERE id = ${req.query.answer_id}`)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+});
+
+app.put('/questionHelp', (req, res) => {
+  db.query(`UPDATE questions SET helpful = helpful + 1 WHERE id = ${req.query.question_id}`)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
 });
 
 app.get('/', (req, res) => {
@@ -53,7 +92,7 @@ app.get('/', (req, res) => {
 app.get('/answers', async (req, res) => {
   // console.log(req.query)
   const response = { question_id: req.query.question_id };
-  response.results = await db.query(`SELECT answers.id, answers.body, to_timestamp(answers.date_written/1000) as date, answers.answerer_name, answers.helpful as helpfulness, json_agg(json_build_object('id', photos.id, 'url', photos.url)) AS photos FROM answers LEFT JOIN photos ON photos.answer_id = answers.id WHERE question_id = ${req.query.question_id} GROUP BY answers.id`);
+  response.results = await db.query(`SELECT answers.id as answer_id, answers.body, to_timestamp(answers.date_written/1000) as date, answers.answerer_name, answers.helpful as helpfulness, json_agg(json_build_object('id', photos.id, 'url', photos.url)) AS photos FROM answers LEFT JOIN photos ON photos.answer_id = answers.id WHERE question_id = ${req.query.question_id} GROUP BY answers.id`);
   res.send(response);
 });
 
