@@ -11,5 +11,11 @@ copy photos(id, answer_id, url)
 FROM '/home/downsauce/hackreactor/SDC/qa-api/answers_photos.csv'
 DELIMITER ','
 CSV HEADER;
+
+copy photos(id, answer_id, url)
+FROM '/home/ubuntu/qa/csv-full/answers_photos.csv'
+DELIMITER ','
+CSV HEADER;
+
 CREATE INDEX answer_idx ON photos (answer_id);
 -- sudo -u postgres psql < server/answers_photos.sql

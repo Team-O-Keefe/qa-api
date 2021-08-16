@@ -1,56 +1,56 @@
 {
-  "name": "qa-api",
-  "version": "1.0.0",
-  "description": "QA api for sdc project",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./server/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Team-O-Keefe/qa-api.git"
-  },
-  "author": "Zadok Kim",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Team-O-Keefe/qa-api/issues"
-  },
-  "homepage": "https://github.com/Team-O-Keefe/qa-api#readme",
-  "dependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.24.0",
-    "express": "^4.17.1",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.12",
-    "pg-promise": "^10.11.0"
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "env": {
-        "es6": true,
-        "browser": true
+    "name": "qa-api",
+    "version": "1.0.0",
+    "description": "QA api for sdc project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon ./server/index.js"
     },
-    "rules": {
-        "brace-style": [
-            "error",
-            "stroustrup"
-        ],
-        "comma-dangle": [
-            "error",
-            "never"
-        ],
-        "no-unused-vars": [
-            "warn"
-        ],
-        "no-var": [
-            "off"
-        ],
-        "one-var": [
-            "off"
-        ]
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Team-O-Keefe/qa-api.git"
+    },
+    "author": "Zadok Kim",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Team-O-Keefe/qa-api/issues"
+    },
+    "homepage": "https://github.com/Team-O-Keefe/qa-api#readme",
+    "dependencies": {
+        "eslint": "^7.32.0",
+        "eslint-config-airbnb-base": "^14.2.1",
+        "eslint-plugin-import": "^2.24.0",
+        "express": "^4.17.1",
+        "morgan": "^1.10.0",
+        "newrelic": "^8.1.0",
+        "nodemon": "^2.0.12",
+        "pg-promise": "^10.11.0"
+    },
+    "eslintConfig": {
+        "extends": "airbnb-base",
+        "env": {
+            "es6": true,
+            "browser": true
+        },
+        "rules": {
+            "brace-style": [
+                "error",
+                "stroustrup"
+            ],
+            "comma-dangle": [
+                "error",
+                "never"
+            ],
+            "no-unused-vars": [
+                "warn"
+            ],
+            "no-var": [
+                "off"
+            ],
+            "one-var": [
+                "off"
+            ]
+        }
     }
-}
-
 }

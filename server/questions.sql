@@ -14,6 +14,12 @@ copy questions(id, product_id, body, date_written, asker_name, asker_email, repo
 FROM '/home/downsauce/hackreactor/SDC/qa-api/questions.csv'
 DELIMITER ','
 CSV HEADER;
+
+copy questions(id, product_id, body, date_written, asker_name, asker_email, reported, helpful)
+FROM '/home/ubuntu/qa/csv-full/questions.csv'
+DELIMITER ','
+CSV HEADER;
+
 CREATE INDEX product_idx on questions (product_id);
 
 -- sudo -u postgres psql < server/questions.sql

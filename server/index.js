@@ -1,3 +1,4 @@
+// require('newrelic');
 const express = require('express');
 
 const morgan = require('morgan');
@@ -10,11 +11,11 @@ app.set('port', 3333);
 const db = require('../db/index');
 
 app.post('/questions', async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const {
     body, name, email, productId
   } = req.body;
-  const id = await db.query('SELECT MAX(id) from questions');
+  const id = await db.query('SELECT MAX(id) from questions');//[{max: 8173349}]
   db.none('INSERT INTO questions(id, product_id, body, date_written, asker_name, asker_email, reported, helpful) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [id[0].max + 1, productId, body, Date.now(), name, email, false, 0])
     .then(() => {
       res.sendStatus(200);
@@ -101,7 +102,29 @@ app.get('/questions', async (req, res) => {
   // console.log(req.query, req.params);
   const response = { product_id: req.query.product_id };
 
-  // `select * from questions where id = ${req.params.question_id} Limit 100`
+  // response.results = await db.query(`SELECT
+  // questions.id as question_id,
+  // questions.body as question_body,
+  // to_timestamp(questions.date_written/1000) as question_date,
+  // questions.asker_name,
+  // questions.helpful as question_helpfulness,
+  // questions.reported,
+  // json_build_object(CAST(answers.id as TEXT), json_build_object(
+  //   'id', answers.id,
+  //   'body', answers.body,
+  //   'date', to_timestamp(answers.date_written/1000),
+  //   'answerer_name', answers.answerer_name,
+  //   'helpfulness', answers.helpful,
+  //   'photos', json_agg(json_build_object('id', photos.id, 'url', photos.url))
+  //   )) AS answers
+  //   FROM questions LEFT JOIN answers ON answers.question_id = questions.id LEFT JOIN photos ON photos.answer_id = answers.id WHERE questions.product_id = 1 GROUP BY questions.id, answers.id`)
+  //   .then(() => {
+  //     res.send(response);
+  //   })
+  //   .catch(() => {
+  //     res.sendStatus(400);
+  //   });
+
   response.results = await db.query(`SELECT id as question_id, body as question_body,
   to_timestamp(date_written/1000) as question_date, asker_name, helpful as question_helpfulness,
    reported FROM questions WHERE product_id = ${req.query.product_id} LIMIT 50`);

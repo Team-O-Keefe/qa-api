@@ -3,3 +3,7 @@ answers.csv
 
 questions.csv
 node_modules/
+newrelic.js
+script.js
+knife-dance.pem
+newrelic_agent.log
