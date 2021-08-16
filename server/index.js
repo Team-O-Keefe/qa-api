@@ -1,11 +1,14 @@
 // require('newrelic');
 const express = require('express');
 
-const morgan = require('morgan');
+const compression = require('compression');
+
+// const morgan = require('morgan');
 
 const app = express();
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(compression());
+// app.use(morgan('dev'));
 app.set('port', 3333);
 
 const db = require('../db/index');
@@ -15,7 +18,10 @@ app.post('/questions', async (req, res) => {
   const {
     body, name, email, productId
   } = req.body;
-  const id = await db.query('SELECT MAX(id) from questions');//[{max: 8173349}]
+  const id = await db.query('SELECT MAX(id) from questions')
+    .catch(() => {
+      res.sendStatus(500);
+    });
   db.none('INSERT INTO questions(id, product_id, body, date_written, asker_name, asker_email, reported, helpful) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [id[0].max + 1, productId, body, Date.now(), name, email, false, 0])
     .then(() => {
       res.sendStatus(200);
@@ -93,7 +99,10 @@ app.get('/', (req, res) => {
 app.get('/answers', async (req, res) => {
   // console.log(req.query)
   const response = { question_id: req.query.question_id };
-  response.results = await db.query(`SELECT answers.id as answer_id, answers.body, to_timestamp(answers.date_written/1000) as date, answers.answerer_name, answers.helpful as helpfulness, json_agg(json_build_object('id', photos.id, 'url', photos.url)) AS photos FROM answers LEFT JOIN photos ON photos.answer_id = answers.id WHERE question_id = ${req.query.question_id} GROUP BY answers.id`);
+  response.results = await db.query(`SELECT answers.id as answer_id, answers.body, to_timestamp(answers.date_written/1000) as date, answers.answerer_name, answers.helpful as helpfulness, json_agg(json_build_object('id', photos.id, 'url', photos.url)) AS photos FROM answers LEFT JOIN photos ON photos.answer_id = answers.id WHERE question_id = ${req.query.question_id} GROUP BY answers.id`)
+    .catch((err) => {
+      res.send(err);
+    });
   res.send(response);
 });
 
